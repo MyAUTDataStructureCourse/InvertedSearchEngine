@@ -11,35 +11,62 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Inverted Index Search Engine</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0" rowspan="2">
-     <widget class="QPushButton" name="pbBuild">
+    <item row="0" column="0" colspan="2">
+     <widget class="QLabel" name="label">
       <property name="text">
-       <string>Build</string>
+       <string>Stop word File path : </string>
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
+    <item row="0" column="2">
+     <widget class="QLineEdit" name="leSWPath"/>
+    </item>
+    <item row="0" column="3">
+     <widget class="QPushButton" name="pbSWBrowse">
+      <property name="text">
+       <string>Browse</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4">
      <widget class="QPushButton" name="pbAddFile">
       <property name="text">
        <string>Add FIle</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="2">
+    <item row="0" column="5">
      <widget class="QPushButton" name="pbAddDir">
       <property name="text">
        <string>Add Directory</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1" rowspan="2" colspan="2">
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pbBuild">
+      <property name="text">
+       <string>Build</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1" colspan="2">
+     <widget class="QComboBox" name="cbTreeType"/>
+    </item>
+    <item row="1" column="3">
+     <widget class="QPushButton" name="pbSWBuild">
+      <property name="text">
+       <string>Build Stop Word Tree</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="4" rowspan="3" colspan="2">
      <widget class="QListView" name="fileList"/>
     </item>
-    <item row="2" column="0">
+    <item row="2" column="0" colspan="4">
      <widget class="QPlainTextEdit" name="cmdOutput">
       <property name="enabled">
        <bool>true</bool>
@@ -68,7 +95,7 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
+    <item row="3" column="0" colspan="4">
      <widget class="QLineEdit" name="cmdInput">
       <property name="cursorMoveStyle">
        <enum>Qt::VisualMoveStyle</enum>

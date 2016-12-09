@@ -27,6 +27,10 @@ private slots:
 
     void on_pbBuild_clicked();
 
+    void on_pbSWBrowse_clicked();
+
+    void on_pbSWBuild_clicked();
+
 private:
     Ui::MainWindow *ui;
     QStandardItemModel *model;

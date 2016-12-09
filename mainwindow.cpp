@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include "terminal.h"
 #include <QDebug>
+#include "stoptree.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,6 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->fileList->setModel(model);
     Terminal::getInstance().setObject(ui->cmdOutput);
     ui->cmdInput->installEventFilter(this);
+
+    ui->cbTreeType->addItem("Binary Search Tree");
+    ui->cbTreeType->addItem("TST");
+    ui->cbTreeType->addItem("Trie");
 }
 
 MainWindow::~MainWindow()
@@ -25,7 +30,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_pbAddFile_clicked()
 {
     QString fileName;
-    fileName = QFileDialog::getOpenFileName(this, tr("Open Image"), QDir::homePath(), tr("Text Files (*.txt)"));
+    fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("Text Files (*.txt)"));
     if(Crawler::getInstance().add_file_to_list(fileName))
         addToList(fileName);
 }
@@ -91,10 +96,41 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             }
         }
     }
+
     return QObject::eventFilter(obj, event);
 }
 
 void MainWindow::on_pbBuild_clicked()
 {
     Terminal::getInstance().writeLine("Start building");
+}
+
+void MainWindow::on_pbSWBrowse_clicked()
+{
+    QString fileName;
+    fileName = QFileDialog::getOpenFileName(this, tr("Stop Word File"), QDir::homePath(), tr("Text Files (*.txt)"));
+    ui->leSWPath->setText(fileName);
+    StopTreeObject::getInstace().setStopWordFilePath(fileName);
+}
+
+void MainWindow::on_pbSWBuild_clicked()
+{
+    switch (ui->cbTreeType->currentIndex()) {
+    case 0:
+        StopTreeObject::getInstace().buildBST();
+        break;
+    case 1:
+        StopTreeObject::getInstace().buildTST();
+        break;
+    case 2:
+        StopTreeObject::getInstace().buildTrie();
+        break;
+    default:
+
+        Terminal::getInstance().writeLine("err : No tree type is selected.");
+        return;
+        break;
+    }
+
+    StopTreeObject::getInstace().buildTree();
 }
