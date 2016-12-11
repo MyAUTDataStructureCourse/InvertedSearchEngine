@@ -4,4 +4,4 @@
 
 * Fully Object Oriented implementation
 * Using singleton pattern
-
+* No memory leak
