@@ -57,11 +57,10 @@ void Crawler::buildTree()
             qDebug() << i;
 
         FileWordNode *pointer = file_words_starts[i]->next;
-
+        
 
         while(pointer)
         {
-            qDebug() << "point is not null";
             Terminal::getInstance().writeLine(pointer->word);
             pointer = pointer->next;
         }

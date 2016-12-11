@@ -6,6 +6,7 @@
 #include "terminal.h"
 #include <QDebug>
 #include "stoptree.h"
+#include "tree.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -31,8 +32,11 @@ void MainWindow::on_pbAddFile_clicked()
 {
     QString fileName;
     fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("Text Files (*.txt)"));
-    if(Crawler::getInstance().add_file_to_list(fileName))
-        addToList(fileName);
+    if(!fileName.isEmpty())
+    {
+        if(Crawler::getInstance().add_file_to_list(fileName))
+            addToList(fileName);
+    }
 }
 
 void MainWindow::addToList(QString value)
@@ -46,18 +50,21 @@ void MainWindow::addToList(QString value)
 
 void MainWindow::on_pbAddDir_clicked()
 {
-    qDebug() << "Hello world";
+
     QString dirName;
     dirName = QFileDialog::getExistingDirectory(this,"Open Direcotyr");
-    QDir *dir = new QDir(dirName);
-
-    QDir recoredDir(dirName);
-    QStringList allFiles = recoredDir.entryList(QDir::Filter::Files | QDir::Files, QDir::DirsFirst);//(QDir::Filter::Files,QDir::SortFlag::NoSort)
-
-    qDebug() << allFiles.size();
-    for(int i = 0; i < allFiles.size(); i++)
+    if(!dirName.isEmpty())
     {
-        addToList(allFiles[i]);
+        QDir *dir = new QDir(dirName);
+
+        QDir recoredDir(dirName);
+        QStringList allFiles = recoredDir.entryList(QDir::Filter::Files | QDir::Files, QDir::DirsFirst);//(QDir::Filter::Files,QDir::SortFlag::NoSort)
+
+        qDebug() << allFiles.size();
+        for(int i = 0; i < allFiles.size(); i++)
+        {
+            addToList(allFiles[i]);
+        }
     }
 }
 
@@ -102,27 +109,50 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 void MainWindow::on_pbBuild_clicked()
 {
-    Terminal::getInstance().writeLine("Start building");
+    Terminal::getInstance().writeLine("Start building ...");
+    Crawler::getInstance().crawlAll();
+
+    switch (ui->cbTreeType->currentIndex()) {
+    case 0:
+        TreeObject::getInstance().initTree(Tree::BST_TREE);
+        break;
+    case 1:
+        TreeObject::getInstance().initTree(Tree::TST_TREE);
+        break;
+    case 2:
+        TreeObject::getInstance().initTree(Tree::TRIE_TREE);
+        break;
+    default:
+
+        Terminal::getInstance().writeError("err : No tree type is selected.");
+        return;
+        break;
+    }
+
+    Crawler::getInstance().buildTree();
 }
 
 void MainWindow::on_pbSWBrowse_clicked()
 {
     QString fileName;
     fileName = QFileDialog::getOpenFileName(this, tr("Stop Word File"), QDir::homePath(), tr("Text Files (*.txt)"));
-    ui->leSWPath->setText(fileName);
-    StopTreeObject::getInstace().setStopWordFilePath(fileName);
+    if(!fileName.isEmpty())
+    {
+        ui->leSWPath->setText(fileName);
+        StopTreeObject::getInstace().setStopWordFilePath(fileName);
+    }
 }
 
 void MainWindow::on_pbSWBuild_clicked()
 {
     switch (ui->cbTreeType->currentIndex()) {
-    case 0:
+    case Tree::BST_TREE:
         StopTreeObject::getInstace().buildBST();
         break;
-    case 1:
+    case Tree::TST_TREE:
         StopTreeObject::getInstace().buildTST();
         break;
-    case 2:
+    case Tree::TRIE_TREE:
         StopTreeObject::getInstace().buildTrie();
         break;
     default:
@@ -132,5 +162,15 @@ void MainWindow::on_pbSWBuild_clicked()
         break;
     }
 
+
     StopTreeObject::getInstace().buildTree();
+
+    if(StopTreeObject::getInstace().isExisted(QString("this")))
+        Terminal::getInstance().writeLine("'This' is existed in the stop words lists");
+
+    if(StopTreeObject::getInstace().isExisted(QString("welcome")))
+        Terminal::getInstance().writeLine("'Welcome' is existed in the stop words lists");
+
+    if(StopTreeObject::getInstace().isExisted(QString("I")))
+        Terminal::getInstance().writeLine("'I' is existed in the stop words lists");
 }

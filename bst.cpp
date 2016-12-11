@@ -1,7 +1,9 @@
 #include "bst.h"
 BSTNode::BSTNode(QString word, FileWordNode *pos_in_file)
 {
-    
+    this->word = word;
+    this->word_head = pos_in_file;
+    this->word_last = pos_in_file;    
 }
 
 BSTNode::BSTNode()
@@ -29,28 +31,30 @@ void BST::add(QString word, FileWordNode *pos_in_file)
         while(pointer)
         {
             parent = pointer;
-            if(pointer->word > word)
+            if(QString::compare(pointer->word, word, Qt::CaseInsensitive) > 0)
             {
                 pointer = pointer->rightChild;
             }
-            else if(pointer->word > word)
+            else if(QString::compare(pointer->word, word, Qt::CaseInsensitive) < 0)
             {
                 pointer = pointer->rightChild;
             }
             else        //      Two nodes have equal vaules
             {
+                pointer->word_last->next = pos_in_file;
+                pos_in_file->last = pointer->word_last;
                 pointer->word_last = pos_in_file;
                 break;
             }
         }
 
-        if(parent->word > word)
+        if(QString::compare(parent->word, word, Qt::CaseInsensitive) < 0)
         {
             parent->leftChild = newNode;
             parent->leftChild->word_head = pos_in_file;
             parent->leftChild->word_last = pos_in_file;
         }
-        else if(parent->word > word)
+        else if(QString::compare(parent->word, word, Qt::CaseInsensitive) > 0)
         {
             parent->rightChild = newNode;
             parent->rightChild->word_head = pos_in_file;

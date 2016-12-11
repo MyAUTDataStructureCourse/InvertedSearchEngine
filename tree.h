@@ -16,18 +16,22 @@ public:
 
     Tree();
     virtual void add(QString word, FileWordNode *pos_in_file) = 0;
-//    virtual FileWordNode *search(QString word);
+    virtual FileWordNode *search(QString word) = 0;
 };
 
 class TreeObject
 {
 private:
     TreeObject();
+    
 public:
     Tree *tree;
 
+    static TreeObject &getInstance();
 
     void initTree(const short tree_type);
     Tree *getTree();
+
+
 };
 #endif // TREE_H

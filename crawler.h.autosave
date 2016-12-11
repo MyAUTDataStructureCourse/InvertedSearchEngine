@@ -59,6 +59,13 @@ public:
     void crawlAll();
     void build(int type);
     void add_directory(std::string dir_path);
+    
+    /**
+     * @brief crawlFile
+     * a fucntion to parse the tree and add it to the linked list
+     * @param file_path
+     * @return 
+     */
     bool crawlFile(QString file_path);
 
     bool add_file_to_list(QString file_path);

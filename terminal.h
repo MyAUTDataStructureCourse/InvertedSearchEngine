@@ -13,6 +13,7 @@ public:
     static Terminal &getInstance();
 
     void writeLine(QString line);
+    void writeError(QString line);
 
     void setObject(QPlainTextEdit *terminalOutput);
 };

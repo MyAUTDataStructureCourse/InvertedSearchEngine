@@ -46,16 +46,6 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="pbBuild">
-      <property name="text">
-       <string>Build</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1" colspan="2">
-     <widget class="QComboBox" name="cbTreeType"/>
-    </item>
     <item row="1" column="3">
      <widget class="QPushButton" name="pbSWBuild">
       <property name="text">
@@ -99,6 +89,16 @@
      <widget class="QLineEdit" name="cmdInput">
       <property name="cursorMoveStyle">
        <enum>Qt::VisualMoveStyle</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QComboBox" name="cbTreeType"/>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QPushButton" name="pbBuild">
+      <property name="text">
+       <string>Build</string>
       </property>
      </widget>
     </item>

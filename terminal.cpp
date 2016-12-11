@@ -21,3 +21,8 @@ void Terminal::setObject(QPlainTextEdit *terminalOutput)
 {
     this->terminalOutput = terminalOutput;
 }
+
+void Terminal::writeError(QString line)
+{
+    writeLine(line);
+}
