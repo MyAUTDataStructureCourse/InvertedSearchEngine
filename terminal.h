@@ -8,6 +8,7 @@ class Terminal
 private:
     Terminal();
     QPlainTextEdit *terminalOutput;
+    void setTheme();
 
 public:
     static Terminal &getInstance();
