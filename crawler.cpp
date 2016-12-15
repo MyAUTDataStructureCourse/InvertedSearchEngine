@@ -1,9 +1,12 @@
 #include "crawler.h"
-#include <log.h>
 #include <QFile>
 #include <QTextStream>
 #include "terminal.h"
 #include <QDebug>
+#include "tree.h"
+#include "stoptree.h"
+#include <QTime>
+#include <QDir>
 
 WordPosition::WordPosition()
 {
@@ -50,22 +53,49 @@ Crawler& Crawler::getInstance()
 
 void Crawler::buildTree()
 {
-    qDebug() << "This is done";
-    for (int i = 0; i < file_words_starts.size(); ++i)
+    int sumWordsCount = 0;
+    int sumTime = 0;
+
+    int fileNum = file_words_starts.size();
+
+    int wordCount = 0;
+    int timeElapsed;
+
+    QTime timer;
+
+    for (int i = 0; i < fileNum; ++i)
     {
-        if(file_words_starts[i])
-            qDebug() << i;
+        wordCount = 0;
 
         FileWordNode *pointer = file_words_starts[i]->next;
 
+        timer.start();
 
         while(pointer)
         {
-            qDebug() << "point is not null";
-            Terminal::getInstance().writeLine(pointer->word);
+
+            if( ! StopTreeObject::getInstace().isExisted(pointer->word))
+            {
+                qDebug() << "this is my line that is running here";
+                TreeObject::getInstance().getTree()->add(pointer->word,pointer);
+                wordCount ++;
+            }
+            qDebug() << "this is my file";
             pointer = pointer->next;
         }
+
+        timeElapsed = timer.elapsed();
+
+        sumTime += timeElapsed;
+        sumWordsCount += wordCount;
+
+        Terminal::getInstance().writeLine(QString("File \"" + this->files_paths[i] + "\" added %1 words to the tree in %2 ms.").arg(wordCount).arg(timeElapsed));
     }
+
+    Terminal::getInstance().writeLine(QString(""));
+    Terminal::getInstance().writeLine(QString(""));
+
+    Terminal::getInstance().writeLine(QString("Totally %1 file(s) added %2 words to the tree in %3 ms.").arg(fileNum).arg(sumWordsCount).arg(sumTime));
 }
 
 void Crawler::tokenizeString(QStringList &tokens,QString &line)
@@ -97,11 +127,13 @@ bool Crawler::crawlFile(QString file_path)
     {
         line = input.readLine();
         tokenizeString(wordsList, line);
+
         for(int i = 0; i < wordsList.size(); i++)
         {
             last->next = new FileWordNode(wordsList[i], line_num);
             last->next->last = last;
             last = last->next;
+            last->next = NULL;
             wordCount ++;
         }
 
@@ -113,9 +145,46 @@ bool Crawler::crawlFile(QString file_path)
     return true;
 }
 
-void Crawler::add_directory(std::__cxx11::string dir_path)
+void Crawler::add_directory(QString dir_path)
 {
 
+    dir_paths.push_back(dir_path);
+
+}
+
+QStringList Crawler::listFiles(int dir_id)
+{
+
+
+    QDir dir(dir_paths[dir_id]);
+
+    dir.setNameFilters(QStringList("*.txt"));
+    dir.setFilter(QDir::Files | QDir::NoDotAndDotDot | QDir::NoSymLinks);
+
+
+
+    QStringList fileList = dir.entryList();
+
+    return fileList;
+
+}
+
+void Crawler::addFilesOfDirectoriesToFilelist()
+{
+    for (int i = 0; i < dir_paths.size(); ++i)
+    {
+        QDir dir(dir_paths[i]);
+
+        dir.setNameFilters(QStringList("*.txt"));
+        dir.setFilter(QDir::Files | QDir::NoDotAndDotDot | QDir::NoSymLinks);
+
+
+        QStringList fileList = dir.entryList();
+        for (int j = 0; j < fileList.size(); ++j)
+        {
+            add_file_to_list(QString("%1/%2").arg(dir.absolutePath()).arg(fileList.at(j)));
+        }
+    }
 }
 
 void Crawler::crawlAll()
@@ -141,6 +210,21 @@ bool Crawler::add_file_to_list(QString file_path)
     }
 }
 
+bool Crawler::isFileExistedInList(QString path)
+{
+    for (int i = 0; i < files_paths.size(); ++i) {
+        if(QString::compare(path, files_paths[i], Qt::CaseSensitive) == 0)
+            return true;
+    }
+
+    return false;
+}
+
+QString Crawler::getDir(int dir_id)
+{
+    return dir_paths[dir_id];
+}
+
 void Crawler::build(int type)
 {
     switch (type) {
@@ -160,7 +244,23 @@ void Crawler::build(int type)
     }
 }
 
+QStringList Crawler::listOfCrawledFiles()
+{
+    QStringList res;
+    for (int i = 0; i < files_paths.size(); ++i)
+    {
+        res.append(files_paths[i]);
+    }
+
+    return res;
+}
+
+void Crawler::freeMemory()
+{
+    // Todo implement free memory function
+}
+
 Crawler::~Crawler()
 {
-
+    freeMemory();
 }

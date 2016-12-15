@@ -7,6 +7,8 @@
 #include <QDebug>
 #include "stoptree.h"
 #include "tree.h"
+#include <QDirIterator>
+#include "cmdline.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->cbTreeType->addItem("Binary Search Tree");
     ui->cbTreeType->addItem("TST");
     ui->cbTreeType->addItem("Trie");
+
 }
 
 MainWindow::~MainWindow()
@@ -53,12 +56,13 @@ void MainWindow::on_pbAddDir_clicked()
 
     QString dirName;
     dirName = QFileDialog::getExistingDirectory(this,"Open Direcotyr");
+
     if(!dirName.isEmpty())
     {
-        QDir *dir = new QDir(dirName);
+        Crawler::getInstance().add_directory(dirName);
 
-        QDir recoredDir(dirName);
-        QStringList allFiles = recoredDir.entryList(QDir::Filter::Files | QDir::Files, QDir::DirsFirst);//(QDir::Filter::Files,QDir::SortFlag::NoSort)
+        Crawler::getInstance().addFilesOfDirectoriesToFilelist();
+        QStringList allFiles = Crawler::getInstance().listFiles();
 
         qDebug() << allFiles.size();
         for(int i = 0; i < allFiles.size(); i++)
@@ -71,9 +75,11 @@ void MainWindow::on_pbAddDir_clicked()
 void MainWindow::on_cmdInput_returnPressed()
 {
     QString cmd = ui->cmdInput->text();
-    Terminal::getInstance().writeLine(cmd);
+    Terminal::getInstance().writeLine(">>> " + cmd);
     ui->cmdInput->setText("");
     before.push(cmd);
+
+    CommandLineInterPreter::getInstance().interpreteCommand(cmd);
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -146,13 +152,13 @@ void MainWindow::on_pbSWBrowse_clicked()
 void MainWindow::on_pbSWBuild_clicked()
 {
     switch (ui->cbTreeType->currentIndex()) {
-    case Tree::BST_TREE:
+    case 0:
         StopTreeObject::getInstace().buildBST();
         break;
-    case Tree::TST_TREE:
+    case 1:
         StopTreeObject::getInstace().buildTST();
         break;
-    case Tree::TRIE_TREE:
+    case 2:
         StopTreeObject::getInstace().buildTrie();
         break;
     default:

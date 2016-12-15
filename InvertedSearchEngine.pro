@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     terminal.cpp \
     stoptree.cpp \
     tst.cpp \
-    trie.cpp
+    trie.cpp \
+    cmdline.cpp
 
 HEADERS  += mainwindow.h \
     crawler.h \
@@ -33,6 +34,7 @@ HEADERS  += mainwindow.h \
     terminal.h \
     stoptree.h \
     tst.h \
-    trie.h
+    trie.h \
+    cmdline.h
 
 FORMS    += mainwindow.ui

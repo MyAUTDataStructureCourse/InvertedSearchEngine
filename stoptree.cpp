@@ -55,7 +55,6 @@ void StopTreeObject::buildTST()
 
 void StopTreeObject::buildTree()
 {
-    qDebug() << QString("this line executed here ");
 
     QTime timer;        // Timer for measuring the time elapsed for adding stop words to their tree
 

@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QStandardItemModel>
 #include "stack.h"
+#include <QDir>
+#include <QDebug>
 
 namespace Ui {
 class MainWindow;

@@ -17,6 +17,7 @@ private:
     int sentence_num;
     std::string last_word;
     std::string next_word;
+
 public:
     WordPosition();
     WordPosition(int file_id, int line_num, int sentence_num, std::string last_word, std::string next_word);
@@ -47,10 +48,14 @@ class Crawler
 {
 private:
     std::vector<QString> files_paths;
+    std::vector<QString> dir_paths;
 
     Crawler();
 
     void tokenizeString(QStringList &tokes,QString &line);
+
+    void freeMemory();
+
 public:
     static Crawler& getInstance();
 
@@ -58,7 +63,20 @@ public:
 
     void crawlAll();
     void build(int type);
-    void add_directory(std::string dir_path);
+    void add_directory(QString dir_path);
+    QStringList listFiles(int dir_id = 0);
+    QStringList listOfCrawledFiles();
+    void addFilesOfDirectoriesToFilelist();
+    QString getDir(int dir_id = 0);
+
+    bool isFileExistedInList(QString path);
+
+    /**
+     * @brief crawlFile
+     * a fucntion to parse the tree and add it to the linked list
+     * @param file_path
+     * @return
+     */
     bool crawlFile(QString file_path);
 
     bool add_file_to_list(QString file_path);
