@@ -9,6 +9,7 @@
 #include "tree.h"
 #include <QDirIterator>
 #include "cmdline.h"
+#include "progressbar.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,6 +25,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->cbTreeType->addItem("TST");
     ui->cbTreeType->addItem("Trie");
 
+    ui->cmdInput->setVisible(false);
+    ProgressBar::getInstance().setCommandLineWidget(ui->cmdInput);
+    ProgressBar::getInstance().setProgressBarWidget(ui->prbPrgress);
+
+    ProgressBar::getInstance().toggleToCMDLine();
 }
 
 MainWindow::~MainWindow()

@@ -16,6 +16,7 @@ private:
     void del(QStringList params);
     void add(QStringList params);
     void list(QStringList params);
+    void search(QStringList params);
 
 public:
     static CommandLineInterPreter &getInstance();

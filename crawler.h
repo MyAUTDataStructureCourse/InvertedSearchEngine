@@ -38,10 +38,13 @@ struct FileWordNode
     QString word;
     FileWordNode *last;
     FileWordNode *next;
+    FileWordNode *last_equal;
+    FileWordNode *next_equal;
     int line_num;
+    int file_id;
 
     FileWordNode();
-    FileWordNode(QString word, int line_num);
+    FileWordNode(QString word, int line_num, int file_id);
 };
 
 class Crawler
@@ -69,6 +72,8 @@ public:
     void addFilesOfDirectoriesToFilelist();
     QString getDir(int dir_id = 0);
 
+    QString getFileName(int id);
+
     bool isFileExistedInList(QString path);
 
     /**
@@ -85,5 +90,7 @@ public:
 
     ~Crawler();
 };
+
+QString linkedListToString(FileWordNode *node);
 
 #endif // CRAWLER_H

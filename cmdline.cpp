@@ -2,6 +2,7 @@
 #include <string.h>
 #include "crawler.h"
 #include "terminal.h"
+#include "tree.h"
 #include <QDebug>
 
 CommandLineInterPreter::CommandLineInterPreter()
@@ -38,7 +39,11 @@ void CommandLineInterPreter::list(QStringList params)
     }
     else if(QString::compare(params[1], "-w", Qt::CaseInsensitive) == 0)
     {
-
+        QStringList wordList = TreeObject::getInstance().listAllWords();
+        Terminal::getInstance().writeLine("List of all the words in the dictionary : ");
+        for (int i = 0; i < wordList.count(); ++i) {
+            Terminal::getInstance().writeLine(wordList.at(i));
+        }
     }
 }
 
@@ -77,5 +82,21 @@ void CommandLineInterPreter::interpreteCommand(QString cmd)
     {
 
     }
+    else if(QString::compare(tokens[0], QString("search"), Qt::CaseInsensitive) == 0)
+    {
+        search(tokens);
+    }
 
+}
+
+void CommandLineInterPreter::search(QStringList params)
+{
+    if(QString::compare(params[1], "-w", Qt::CaseInsensitive) == 0)
+    {
+        QStringList fileList = TreeObject::getInstance().searchWord(params[2]);
+        Terminal::getInstance().writeLine(QString("List of files that has the word %1 :").arg(params[2]));
+        for (int i = 0; i < fileList.size(); ++i) {
+            Terminal::getInstance().writeLine(fileList[i]);
+        }
+    }
 }

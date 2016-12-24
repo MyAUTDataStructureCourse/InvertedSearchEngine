@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     stoptree.cpp \
     tst.cpp \
     trie.cpp \
-    cmdline.cpp
+    cmdline.cpp \
+    progressbar.cpp
 
 HEADERS  += mainwindow.h \
     crawler.h \
@@ -35,6 +36,7 @@ HEADERS  += mainwindow.h \
     stoptree.h \
     tst.h \
     trie.h \
-    cmdline.h
+    cmdline.h \
+    progressbar.h
 
 FORMS    += mainwindow.ui

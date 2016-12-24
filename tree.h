@@ -4,7 +4,12 @@
 #include <QString>
 #include "crawler.h"
 
-
+struct FileWordPositionWrapper
+{
+    FileWordPositionWrapper(FileWordNode *start, FileWordNode *end);
+    FileWordNode *start;
+    FileWordNode *end;
+};
 
 class Tree
 {
@@ -16,7 +21,8 @@ public:
 
     Tree();
     virtual void add(QString word, FileWordNode *pos_in_file) = 0;
-    virtual FileWordNode *search(QString word) = 0;
+    virtual FileWordPositionWrapper search(QString word) = 0;
+    virtual QStringList listAllWords() = 0;
 };
 
 class TreeObject
@@ -30,8 +36,11 @@ public:
     static TreeObject &getInstance();
 
     void initTree(const short tree_type);
+    QStringList listAllWords();
     Tree *getTree();
 
+    QStringList searchWord(QString word);
 
+    QStringList searchQuery(QString query);
 };
 #endif // TREE_H

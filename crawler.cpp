@@ -20,6 +20,7 @@ WordPosition::WordPosition(int file_id, int line_num, int sentence_num, std::__c
     this->sentence_num = sentence_num;
     this->last_word = last_word;
     this->next_word = next_word;
+
 }
 
 Crawler::Crawler()
@@ -31,13 +32,16 @@ FileWordNode::FileWordNode()
 {
     this->next = NULL;
     this->last = NULL;
+    this->last_equal = NULL;
+    this->next_equal = NULL;
 }
 
-FileWordNode::FileWordNode(QString word,int line_num)
+FileWordNode::FileWordNode(QString word,int line_num, int file_id)
 {
     FileWordNode();
     this->word = word;
     this->line_num = line_num;
+    this->file_id = file_id;
 }
 
 void Word::add_position(WordPosition position)
@@ -76,11 +80,9 @@ void Crawler::buildTree()
 
             if( ! StopTreeObject::getInstace().isExisted(pointer->word))
             {
-                qDebug() << "this is my line that is running here";
                 TreeObject::getInstance().getTree()->add(pointer->word,pointer);
                 wordCount ++;
             }
-            qDebug() << "this is my file";
             pointer = pointer->next;
         }
 
@@ -130,7 +132,7 @@ bool Crawler::crawlFile(QString file_path)
 
         for(int i = 0; i < wordsList.size(); i++)
         {
-            last->next = new FileWordNode(wordsList[i], line_num);
+            last->next = new FileWordNode(wordsList[i], line_num, this->file_words_starts.size() - 1);
             last->next->last = last;
             last = last->next;
             last->next = NULL;
@@ -143,6 +145,11 @@ bool Crawler::crawlFile(QString file_path)
     Terminal::getInstance().writeLine(QString("File \"" + file_path + "\" crawled and %1 words detected.").arg(wordCount));
 
     return true;
+}
+
+QString Crawler::getFileName(int id)
+{
+    return files_paths[id];
 }
 
 void Crawler::add_directory(QString dir_path)
@@ -190,6 +197,7 @@ void Crawler::addFilesOfDirectoriesToFilelist()
 void Crawler::crawlAll()
 {
     Terminal::getInstance().writeLine("Start crawling on files ....");
+
     for(int i = 0; i < files_paths.size(); i++)
     {
         crawlFile(files_paths[i]);
@@ -263,4 +271,14 @@ void Crawler::freeMemory()
 Crawler::~Crawler()
 {
     freeMemory();
+}
+
+QString linkedListToString(FileWordNode *node)
+{
+    QString res;
+    if(node->last)
+    {
+
+    }
+    return res;
 }
